@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation letter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffb6c1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .intro {
+            text-align: center;
+            font-size: 20px;
+            color: #d6336c;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .heart {
+            font-size: 40px;
+            cursor: pointer;
+            color: red;
+            animation: beat 1s infinite;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Floating Hearts */
+        .floating-heart {
+            position: absolute;
+            color: red;
+            font-size: 20px;
+            opacity: 0.7;
+            animation: float 5s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        .letter-box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+            position: absolute;
+            bottom: -100%;
+            opacity: 0;
+            transition: bottom 1s ease-in-out, opacity 1s ease-in-out;
+            z-index: 10;
+        }
+
+        .letter-box h2 {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            color: #d6336c;
+        }
+
+        .letter-box p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Music Player */
+        .music-box {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: bottom 1s ease-in-out, opacity 1s ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .music-box.show {
+            bottom: 10%;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .music-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+
+        .music-box .text {
+            font-size: 14px;
+        }
+
+        .music-box .text strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        /* Play Button */
+        .play-btn {
+            background: #d6336c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .play-btn:hover {
+            background: #b52b5b;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="intro" id="intro">
+        <p>Click the heart!</p>
+        <div class="heart" onclick="showLetter()">❤️</div>
+    </div>
+
+    <div class="letter-box" id="letter">
+        <h2>yoh yoh yohhh!</h2>
+        <p>
+            I'll be direct to the point na. I want to ask you out on a date sana HAHAHA ita nga hell week ket nalpasen. 
+            I know nga super pagod etoy nga week, so congrats dahil naka survive ka 'ta' HAHAHA. 
+            As a reward, iyaban ka kuma mangan ruwar like ag ice cream/ halo halo sa gedli. tas chika about nangyare kanyata in the past few days. 
+        </p>
+        <p>
+            So, leave your Saturday free HAHAHA tapno agad agad. Ofc, sika ag decide nu ana oras and ayna meetup place ta. baka kayat mo sundoen kapay HAAHHA joke.
+        </p>
+    </div>
+
+    <div class="music-box" id="music-box">
+        <img src="album.jpg" alt="Album Cover">
+        <div class="text">
+            <strong>Stay While</strong>
+            <span>Niko Rain</span>
+        </div>
+        <button class="play-btn" onclick="toggleMusic()">Play</button>
+        <audio id="bg-music" src="your-music-file.mp3"></audio>
+    </div>
+
+    <script>
+        function showLetter() {
+            let letter = document.getElementById('letter');
+            let intro = document.getElementById('intro');
+            let musicBox = document.getElementById('music-box');
+            let music = document.getElementById('bg-music');
+
+            // Hide the heart button
+            intro.style.display = 'none';
+
+            // Show the letter
+            letter.style.bottom = '30%'; 
+            letter.style.opacity = '1';
+
+            // Show the music player
+            musicBox.classList.add('show');
+
+            // Try to autoplay music after user interaction
+            music.play().then(() => {
+                document.querySelector('.play-btn').textContent = 'Pause';
+            }).catch(error => {
+                console.log("Autoplay blocked. User must manually press play.");
+            });
+
+            generateHearts();
+        }
+
+        function toggleMusic() {
+            let music = document.getElementById('bg-music');
+            let btn = document.querySelector('.play-btn');
+
+            if (music.paused) {
+                music.play();
+                btn.textContent = 'Pause';
+            } else {
+                music.pause();
+                btn.textContent = 'Play';
+            }
+        }
+
+        function generateHearts() {
+            setInterval(() => {
+                let heart = document.createElement("div");
+                heart.classList.add("floating-heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = Math.random() * 2 + 3 + "s"; 
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000);
+            }, 300);
+        }
+    </script>
+
+</body>
+</html>
